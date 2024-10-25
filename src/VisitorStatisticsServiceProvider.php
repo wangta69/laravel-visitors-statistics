@@ -5,7 +5,7 @@ namespace Pondol\VisitorsStatistics;
 
 use Illuminate\Support\ServiceProvider;
 
-class VisitorStatisticsProvider extends ServiceProvider
+class VisitorStatisticssServicePProvider extends ServiceProvider
 {
   /**
    * Register services.
