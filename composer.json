@@ -1,0 +1,32 @@
+{
+  "name": "wangta69/laravel-visitors-statistics",
+  "description": "Visitor tracker and statistics package for Laravel.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pondol",
+      "email": "wangta69@gmail.com",
+      "homepage": "https://www.onstory.fun"
+    }
+],
+  "minimum-stability": "dev",
+  "require": {
+      "php": ">=7.0.0"
+  },
+  "require-dev": {
+      "orchestra/testbench": "^3.8"
+  },
+  "autoload": {
+      "psr-4": {
+          "Pondol\\VisitorsStatistics\\": "src/"
+      }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Pondol\\VisitorsStatistics\\VisitorStatisticsServiceProvider"
+      ]
+    }
+  }
+}
