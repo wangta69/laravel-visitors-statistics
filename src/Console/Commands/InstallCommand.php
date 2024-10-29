@@ -1,6 +1,6 @@
 <?php
 
-namespace Pondol\VisitorsStatistics\Console;
+namespace Pondol\VisitorsStatistics\Console\Commands;
 
 use Illuminate\Console\Command;
 // use Illuminate\Filesystem\Filesystem;
@@ -24,7 +24,7 @@ class InstallCommand extends Command
    *
    * @var string
    */
-  protected $description = 'Install the Laravel Visitor Statistics Tracker';
+  protected $description = 'Install the Laravel Visitor Statistics Tracker.';
 
 
   public function __construct()
@@ -36,8 +36,5 @@ class InstallCommand extends Command
   {
     $type = $this->argument('type');
   }
-
-
-
 
 }

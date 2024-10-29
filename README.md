@@ -3,5 +3,6 @@
 ## installation
 ```
 composer require wangta69/laravel-visitors-statistics
+php artisan pondol:maxmind-update
 ```
 
