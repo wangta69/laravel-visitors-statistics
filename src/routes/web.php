@@ -1,31 +1,20 @@
 <?php
 
-Route::get('/statistics/{year}/{month?}', 'StatisticsController@getStatistics')
-    ->where([
-        'year' => '\d{4}',
-        'month' => '\d{1,2}'
-    ])
-    ->name('visitorstatistics.all_statistics');
+Route::get('statistics/{year}/{month?}', 'ApiController@getStatistics')
+  ->where(['year' => '\d{4}','month' => '\d{1,2}'])
+  ->name('all_statistics');
 
-Route::get('/statistics/unique/{year}/{month?}', 'StatisticsController@getUniqueStatistics')
-    ->where([
-        'year' => '\d{4}',
-        'month' => '\d{1,2}'
-    ])
-    ->name('visitorstatistics.unique_statistics');
+Route::get('statistics/unique/{year}/{month?}', 'ApiController@getUniqueStatistics')
+  ->where(['year' => '\d{4}','month' => '\d{1,2}'])
+  ->name('unique_statistics');
 
-Route::get('/statistics/total/{year}/{month?}', 'StatisticsController@getTotalStatistics')
-    ->where([
-        'year' => '\d{4}',
-        'month' => '\d{1,2}'
-    ])
-    ->name('visitorstatistics.total_statistics');
+Route::get('statistics/total/{year}/{month?}', 'ApiController@getTotalStatistics')
+  ->where(['year' => '\d{4}','month' => '\d{1,2}'])
+  ->name('total_statistics');
 
-Route::get('/statistics/countries', 'StatisticsController@getCountriesStatistics')
-    ->name('visitorstatistics.countries');
+Route::get('statistics/countries', 'ApiController@getCountriesStatistics')
+  ->name('countries');
 
-Route::get('/statistics/available/{year?}', 'StatisticsController@getAvailableDates')
-    ->where([
-        'year' => '\d{4}'
-    ])
-    ->name('visitorstatistics.available_dates');
+Route::get('statistics/available/{year?}', 'ApiController@getAvailableDates')
+  ->where(['year' => '\d{4}'])
+  ->name('available_dates');

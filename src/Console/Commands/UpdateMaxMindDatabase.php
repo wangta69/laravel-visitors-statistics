@@ -3,10 +3,12 @@
 namespace Pondol\VisitorsStatistics\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 
 use Exception;
 use PharData;
 use File;
+
 
 class UpdateMaxMindDatabase extends Command
 {
@@ -43,49 +45,49 @@ class UpdateMaxMindDatabase extends Command
    */
   public function handle()
   {
-    $this->updateCity();
-    // $this->updateASN();
-    $this->updateCountry();
+    $storage_path = config('pondol-visitor.storage_path');
+    (new Filesystem)->ensureDirectoryExists($storage_path);
+    $this->updateCity($storage_path);
+    // $this->updateASN($storage_path);
+    // $this->updateCountry($storage_path);
 
   }
 
-  private function updateCity() {
-    $Permalinks = config('visitorstatistics.permalink_City');
+  private function updateCity($storage_path) {
+    $Permalinks = config('pondol-visitor.permalink_City');
     $info = $this->getdownloadUrl($Permalinks);
 
     // get mmdb database(tar.gz)
-    copy($info['redirect_url'], storage_path('app/public/GeoIP').'/GeoLite2-City.tar.gz');
-    $this->extract('GeoLite2-City');
+    copy($info['redirect_url'], $storage_path.'/GeoLite2-City.tar.gz');
+    $this->extract('GeoLite2-City', $storage_path);
   }
 
-  private function updateASN() {
-    $Permalinks = config('visitorstatistics.permalink_ASN');
+  private function updateASN($storage_path) {
+    $Permalinks = config('pondol-visitor.permalink_ASN');
     $info = $this->getdownloadUrl($Permalinks);
 
     // get mmdb database(tar.gz)
-    copy($info['redirect_url'], storage_path('app/public/GeoIP').'/GeoLite2-ASN.tar.gz');
-    $this->extract('GeoLite2-ASN');
+    copy($info['redirect_url'], $storage_path.'/GeoLite2-ASN.tar.gz');
+    $this->extract('GeoLite2-ASN', $storage_path);
   }
 
-  private function updateCountry() {
-    $Permalinks = config('visitorstatistics.permalink_Country');
+  private function updateCountry($storage_path) {
+    $Permalinks = config('pondol-visitor.permalink_Country');
     $info = $this->getdownloadUrl($Permalinks);
 
     // get mmdb database(tar.gz)
-    copy($info['redirect_url'], storage_path('app/public/GeoIP').'/GeoLite2-Country.tar.gz');
-    $this->extract('GeoLite2-Country');
+    copy($info['redirect_url'], $storage_path.'/GeoLite2-Country.tar.gz');
+    $this->extract('GeoLite2-Country', $storage_path);
   }
 
   /**
    * get real download url using permalink.
    */
   private function getdownloadUrl($Permalinks) {
-    $user_id = config('visitorstatistics.user_id');
-    $licensekey = config('visitorstatistics.license_key');
+    $user_id = config('pondol-visitor.maxmind_user_id');
+    $licensekey = config('pondol-visitor.maxmind_license_key');
     
     
-    //curl -O -J -L -u YOUR_ACCOUNT_ID:YOUR_LICENSE_KEY 'https://download.maxmind.com/geoip/databases/GeoIP2-City-CSV/download?suffix=zip';
-
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $Permalinks);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -98,8 +100,7 @@ class UpdateMaxMindDatabase extends Command
 
   }
 
-  private function extract($dest) {
-    $storage_path = storage_path('app/public/GeoIP');
+  private function extract($dest, $storage_path) {
     $zipPath = $storage_path.'/'.$dest.'.tar.gz';
 
     try {

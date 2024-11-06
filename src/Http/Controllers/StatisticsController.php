@@ -1,15 +1,43 @@
 <?php
 
 namespace Pondol\VisitorsStatistics\Http\Controllers;
-
-use Pondol\VisitorsStatistics\Models\Visitor;
-use Pondol\VisitorsStatistics\Models\Statistic;
-use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
+
+use Pondol\VisitorsStatistics\Traits\Statistics as t_Statistics;
+use Pondol\Charts\Facades\Chartjs;
+
+use App\Http\Controllers\Controller;
 
 class StatisticsController extends Controller
 {
+
+  use t_Statistics;
+
+  public function dashboard() {
+    $year = Carbon::now()->year;
+    $month = Carbon::now()->month;
+    $data = $this->_getTotalStatistics($year, $month);
+
+    $chart = Chartjs::
+    type('line')
+    ->element('dailyChart')
+    ->labels(array_keys($data['all']))
+    ->datasets([
+      [
+        'label' => '# all',
+        'data' => array_values($data['all']),
+        'borderWidth' => 1
+      ],
+      [
+        'label' => '# unique',
+        'data' => array_values($data['unique']),
+        'borderWidth' => 1
+      ]
+    ])
+    ->options(['title'=>['text'=>'ryu....']])->render();
+
+    return view('visitors::admin.dashboard', compact('chart'));
+  }
   /**
    * Get statistics for the given year or month.
    *
@@ -18,11 +46,10 @@ class StatisticsController extends Controller
    *
    * @return JsonResponse
    */
-  public function getStatistics(int $year, ?int $month = null): JsonResponse
+  public function getStatistics(int $year, ?int $month = null)
   {
-    return response()->json([
-      'data' => $this->retrieveStatistics(Statistic::TYPES['all'], $year, $month),
-    ]);
+    print_r($this->_getTotalStatistics($year, $month));
+    return view('visitors::admin.dashboard', $this->_getStatistics($year, $month));
   }
 
   /**
@@ -33,11 +60,9 @@ class StatisticsController extends Controller
    *
    * @return JsonResponse
    */
-  public function getUniqueStatistics(int $year, ?int $month = null): JsonResponse
+  public function getUniqueStatistics(int $year, ?int $month = null)
   {
-    return response()->json([
-      'data' => $this->retrieveStatistics(Statistic::TYPES['unique'], $year, $month),
-    ]);
+    return response()->json($this->_getUniqueStatistics($year, $month));
   }
 
   /**
@@ -48,12 +73,9 @@ class StatisticsController extends Controller
    *
    * @return JsonResponse
    */
-  public function getTotalStatistics(int $year, ?int $month = null): JsonResponse
+  public function getTotalStatistics(int $year, ?int $month = null)
   {
-    return response()->json([
-      'all' => $this->retrieveStatistics(Statistic::TYPES['all'], $year, $month),
-      'unique' => $this->retrieveStatistics(Statistic::TYPES['unique'], $year, $month),
-    ]);
+    return response()->json($this->_getTotalStatistics($year, $month));
   }
 
   /**
@@ -61,18 +83,9 @@ class StatisticsController extends Controller
    *
    * @return JsonResponse
    */
-  public function getCountriesStatistics(): JsonResponse
+  public function getCountriesStatistics()
   {
-    $visitors = Visitor::getVisitorCountPerCountry();
-    $visitorCount = Visitor::count();
-
-    foreach ($visitors as $visitor) {
-      $visitor->percentage = round($visitor->count * 100 / $visitorCount, 2);
-    }
-
-    return response()->json([
-      'data' => $visitors,
-    ]);
+    return response()->json($this->_getCountriesStatistics());
   }
 
   /**
@@ -82,91 +95,8 @@ class StatisticsController extends Controller
    *
    * @return JsonResponse
    */
-  public function getAvailableDates(?int $year = null): JsonResponse
+  public function getAvailableDates(?int $year = null)
   {
-    $result = [];
-
-    if (is_null($year)) {
-      $min = Statistic::min('created_at');
-      $max = Statistic::max('created_at');
-
-      if (!is_null($min)) {
-        $startYear = Carbon::createFromTimeString($min)->year;
-        $endYear = Carbon::createFromTimeString($max)->year;
-
-        for ($i = $startYear; $i <= $endYear; $i++) {
-          $result[] = $i;
-        }
-
-        if ($startYear !== $endYear) {
-          $result[] = $endYear;
-        }
-      }
-    } else {
-      $startDate = Carbon::createFromDate($year, 1, 1);
-      $endDate = Carbon::createFromDate($year, 12, 31);
-
-      $min = Statistic::whereBetween('created_at', [$startDate, $endDate])->min('created_at');
-      $max = Statistic::whereBetween('created_at', [$startDate, $endDate])->max('created_at');
-
-      if (!is_null($min)) {
-        $startMonth = Carbon::createFromTimeString($min)->month;
-        $endMonth = Carbon::createFromTimeString($max)->month;
-
-        for ($i = $startMonth; $i <= $endMonth; $i++) {
-          $result[] = $i;
-        }
-      }
-    }
-
-    return response()->json([
-      'data' => $result
-    ]);
-  }
-
-  /**
-   * Retrieve statistics for given year or month and type.
-   *
-   * @param string $type
-   * @param int $year
-   * @param int|null $month
-   *
-   * @return array
-   */
-  private function retrieveStatistics(string $type, int $year, ?int $month = null): array
-  {
-    if (is_null($month)) {
-      $startDate = Carbon::createFromDate($year, 1, 1)->startOfDay();
-      $endDate = $startDate->copy()->endOfYear();
-    } else {
-      $startDate = Carbon::createFromDate($year, $month, 1)->startOfDay();
-      $endDate = $startDate->copy()->endOfMonth();
-    }
-
-    $data = [];
-    $statistics = Statistic::select(['value', 'created_at'])
-      ->whereBetween('created_at', [$startDate, $endDate])
-      ->where('type', $type)
-      ->get();
-
-    if (is_null($month)) {
-      for ($i = 1; $i <= 12; $i++) {
-        $data[$i] = 0;
-      }
-
-      foreach ($statistics as $statistic) {
-        $data[Carbon::createFromTimeString($statistic->created_at)->month] += $statistic->value;
-      }
-    } else {
-      for ($i = 1; $i <= Carbon::createFromDate($year, $month, 1)->endOfMonth()->day; $i++) {
-        $data[$i] = 0;
-      }
-
-      foreach ($statistics as $statistic) {
-        $data[Carbon::createFromTimeString($statistic->created_at)->day] += $statistic->value;
-      }
-    }
-
-    return $data;
+    return response()->json($this->_getAvailableDates($year));
   }
 }

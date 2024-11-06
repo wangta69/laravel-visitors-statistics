@@ -31,7 +31,9 @@ class GeoIP implements GeoIPContract
   public function __construct(string $ipAddress)
   {
     try {
-      $cityDbReader = new Reader(storage_path('app/public/GeoIP').'/GeoLite2-City.mmdb');
+      $storage_path = config('pondol-visitor.storage_path');
+
+      $cityDbReader = new Reader($storage_path.'/GeoLite2-City.mmdb');
       $record = $cityDbReader->city($ipAddress);
 
 

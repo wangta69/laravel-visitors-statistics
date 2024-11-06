@@ -2,11 +2,8 @@
 
 namespace Pondol\VisitorsStatistics\Console\Commands;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Console\Command;
-// use Illuminate\Filesystem\Filesystem;
-// use Illuminate\Support\Str;
-// use Symfony\Component\Process\PhpExecutableFinder;
-// use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
@@ -17,7 +14,7 @@ class InstallCommand extends Command
    *
    * @var string
    */
-  protected $signature = 'pondol:install-visitor-statistics {type=full}'; // full | only
+  protected $signature = 'pondol:install-visitors {type=full}'; // full | only
 
   /**
    * The console command description.
@@ -35,6 +32,20 @@ class InstallCommand extends Command
   public function handle()
   {
     $type = $this->argument('type');
+    $this->installLaravelVisitors($type);
+  }
+
+  private function installLaravelVisitors($type) {
+    \Artisan::call('vendor:publish',  [
+      '--force'=> true,
+      '--provider' => 'Pondol\VisitorsStatistics\VisitorStatisticsServiceProvider'
+    ]);
+    
+    \Artisan::call('migrate');
+    // copy GeoLite2-City.mmdb
+    $storage_path = config('pondol-visitor.storage_path');
+    (new Filesystem)->ensureDirectoryExists($storage_path);
+    copy(__DIR__.'/../../resources/GeoLite2-City.mmdb', $storage_path.'/GeoLite2-City.mmdb');
   }
 
 }

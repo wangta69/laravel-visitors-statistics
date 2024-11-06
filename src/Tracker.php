@@ -4,8 +4,9 @@ namespace Pondol\VisitorsStatistics;
 
 use Pondol\VisitorsStatistics\Contracts\Tracker as TrackerContract;
 use Pondol\VisitorsStatistics\Contracts\Visitor as VisitorContact;
-use Pondol\VisitorsStatistics\Models\Statistic;
-use Pondol\VisitorsStatistics\Models\Visitor as VisitorModel;
+use Pondol\VisitorsStatistics\Models\VisitorsStatistic;
+use Pondol\VisitorsStatistics\Models\Visitor;
+use Pondol\VisitorsStatistics\Models\VisitorsLog;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
@@ -56,14 +57,14 @@ class Tracker implements TrackerContract
   public function recordVisit()
   {
     if ($this->shouldTrackUser()) {
-      $isNewVisitor = $this->saveVisitor($this->getVisitorInformation());
-      $this->updateStatistics();
+      $visitorInformation = $this->getVisitorInformation();
+      $isNewVisitor = $this->storeVisitor($visitorInformation);
+      $this->storeVisitorlogs($visitorInformation);
+      $this->updateAllStatistics();
 
       if ($isNewVisitor) {
         $this->updateUniqueStatistics();
       }
-
-      $this->updateMaxOnline();
     }
   }
 
@@ -79,9 +80,9 @@ class Tracker implements TrackerContract
       return false;
     }
 
-    // if ((config('visitorstatistics.track_authenticated_users') === false && !is_null(auth()->user())) ||
-    //   (config('visitorstatistics.track_ajax_request') === false && request()->ajax()) ||
-    //   $this->request->is(config('visitorstatistics.login_route_path')) ||
+    // if ((config('pondol-visitor.track_authenticated_users') === false && !is_null(auth()->user())) ||
+    //   (config('pondol-visitor.track_ajax_request') === false && request()->ajax()) ||
+    //   $this->request->is(config('pondol-visitor.login_route_path')) ||
     //   $this->visitor->isBot()) {
     //   return false;
     // }
@@ -113,32 +114,39 @@ class Tracker implements TrackerContract
    *
    * @return bool True if new visitor, false if existing
    */
-  private function saveVisitor(array $visitorInformation): bool
+  private function storeVisitor(array $visitorInformation): bool
   {
-    $hasVisitedToday = VisitorModel::where('ip', $visitorInformation['ip'])
+    $hasVisitedToday = Visitor::where('ip', $visitorInformation['ip'])
       ->whereBetween('created_at', [$this->today, $this->today->copy()->endOfDay()])
       ->first();
 
     if ($hasVisitedToday) {
       $hasVisitedToday->touch();
-
       return false;
     }
 
-    VisitorModel::create($visitorInformation);
+    Visitor::create($visitorInformation);
 
     return true;
   }
 
+  private function storeVisitorlogs(array $visitorInformation): bool {
+    $visitorInformation['user_id'] = \Auth::id();
+    VisitorsLog::create($visitorInformation);
+
+    return true;
+  }
+
+  
+
   /**
    * Update statistics in the database.
    */
-  private function updateStatistics(): void
+  private function updateAllStatistics(): void
   {
-    $rowName = sprintf('%s_%s', $this->today->format('Y_m_d'), Statistic::TYPES['all']);
-    $statistic = Statistic::firstOrNew([
-      'name' => $rowName,
-      'type' => Statistic::TYPES['all'],
+    $statistic = VisitorsStatistic::firstOrNew([
+      'date' => $this->today->format('Y-m-d'),
+      'type' => VisitorsStatistic::TYPES['all'],
     ]);
     $statistic->value++;
     $statistic->save();
@@ -149,36 +157,14 @@ class Tracker implements TrackerContract
    */
   private function updateUniqueStatistics(): void
   {
-    $rowName = sprintf('%s_%s', $this->today->format('Y_m_d'), Statistic::TYPES['unique']);
-    $statistic = Statistic::firstOrNew([
-      'name' => $rowName,
-      'type' => Statistic::TYPES['unique'],
+    $statistic = VisitorsStatistic::firstOrNew([
+      'date' => $this->today->format('Y-m-d'),
+      'type' => VisitorsStatistic::TYPES['unique'],
     ]);
     $statistic->value++;
     $statistic->save();
   }
 
-  /**
-   * Update max visitors online in the database.
-   */
-  private function updateMaxOnline()
-  {
-    $max = Statistic::maxVisitors();
-
-    $endDate = Carbon::now();
-    $startDate = $endDate->copy()->subMinutes(15);
-
-    $currentMax = VisitorModel::whereBetween('updated_at', [$startDate, $endDate])->count();
-
-    if ($currentMax > $max) {
-      Statistic::updateOrCreate([
-        'name' => 'max_online',
-        'type' => Statistic::TYPES['max'],
-      ], [
-        'value' => $currentMax,
-      ]);
-    }
-  }
 
   private function getRealIpAddr(){
     // ipAddress' => $request->header('HTTP_CF_CONNECTING_IP') ?? $request->getClientIp(),
