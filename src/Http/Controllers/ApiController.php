@@ -11,8 +11,9 @@ class ApiController extends Controller
 {
 
   use t_Statistics;
-  /**
-   * Get statistics for the given year or month.
+
+   /**
+   * Get both all and unique statistics for a given year or month.
    *
    * @param int $year
    * @param int|null $month
@@ -22,6 +23,20 @@ class ApiController extends Controller
   public function getStatistics(int $year, ?int $month = null): JsonResponse
   {
     return response()->json($this->_getStatistics($year, $month));
+  }
+
+  
+  /**
+   * Get statistics for the given year or month.
+   *
+   * @param int $year
+   * @param int|null $month
+   *
+   * @return JsonResponse
+   */
+  public function getAllStatistics(int $year, ?int $month = null): JsonResponse
+  {
+    return response()->json($this->_getAllStatistics($year, $month));
   }
 
   /**
@@ -37,18 +52,7 @@ class ApiController extends Controller
     return response()->json($this->_getUniqueStatistics($year, $month));
   }
 
-  /**
-   * Get both all and unique statistics for a given year or month.
-   *
-   * @param int $year
-   * @param int|null $month
-   *
-   * @return JsonResponse
-   */
-  public function getTotalStatistics(int $year, ?int $month = null): JsonResponse
-  {
-    return response()->json($this->_getTotalStatistics($year, $month));
-  }
+ 
 
   /**
    * Get visits count and percentage for each country.

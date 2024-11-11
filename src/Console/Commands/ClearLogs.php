@@ -46,6 +46,6 @@ class ClearLogs extends Command
   }
 
   private function logsClear() {
-    ClearLogs::where('created_at', '<',  Carbon::now()->subDays(config('pondol-visitor.visitors_logs_retention period'))->startOfDay())->delete();
+    ClearLogs::where('created_at', '<',  Carbon::now()->subDays(config('pondol-visitor.visitors_logs_retention_period'))->startOfDay())->delete();
   }
 }

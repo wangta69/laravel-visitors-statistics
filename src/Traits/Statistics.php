@@ -10,6 +10,50 @@ use Carbon\Carbon;
 
 trait Statistics
 {
+
+
+   /**
+   * Get both all and unique statistics for a given year or month.
+   *
+   * @param int $year
+   * @param int|null $month
+   *
+   * @return JsonResponse
+   */
+  public function _getTodayStatistics(string $date)
+  {
+
+    $statistic = VisitorsStatistic::where('date', $date)->get();
+    $return = [];
+    foreach($statistic as $v) {
+      $return[$v->type] = $v->value;
+    }
+
+    $return['online'] = Visitor::onlineCount(config('pondol-visitor.visitors_online_period'));
+    return $return;
+  }
+
+
+  /**
+   * Get both all and unique statistics for a given year or month.
+   *
+   * @param int $year
+   * @param int|null $month
+   *
+   * @return JsonResponse
+   */
+  public function _getStatistics(int $year, ?int $month = null)
+  {
+
+    return [
+      'all' => $this->retrieveStatistics(VisitorsStatistic::TYPES['all'], $year, $month),
+      'unique' => $this->retrieveStatistics(VisitorsStatistic::TYPES['unique'], $year, $month),
+    ];
+
+
+  }
+
+
   /**
    * Get statistics for the given year or month.
    *
@@ -18,7 +62,7 @@ trait Statistics
    *
    * @return JsonResponse
    */
-  public function _getStatistics(int $year, ?int $month = null) 
+  public function _getAllStatistics(int $year, ?int $month = null) 
   {
     return [
       'data' => $this->retrieveStatistics(VisitorsStatistic::TYPES['all'], $year, $month),
@@ -40,21 +84,7 @@ trait Statistics
     ];
   }
 
-  /**
-   * Get both all and unique statistics for a given year or month.
-   *
-   * @param int $year
-   * @param int|null $month
-   *
-   * @return JsonResponse
-   */
-  public function _getTotalStatistics(int $year, ?int $month = null)
-  {
-    return [
-      'all' => $this->retrieveStatistics(VisitorsStatistic::TYPES['all'], $year, $month),
-      'unique' => $this->retrieveStatistics(VisitorsStatistic::TYPES['unique'], $year, $month),
-    ];
-  }
+  
 
   /**
    * Get visits count and percentage for each country.

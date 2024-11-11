@@ -26,7 +26,8 @@ return [
   unit : day
   after 90 day, visitors_logs data will be deleted
   */
-  'visitors_logs_retention period' => 90,
+  'visitors_logs_retention_period' => 90,
+  'visitors_online_period' => 15,
 
   /*
   |--------------------------------------------------------------------------

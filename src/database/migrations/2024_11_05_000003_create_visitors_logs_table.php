@@ -23,7 +23,7 @@ class CreateVisitorsLogsTable extends Migration
       $table->string('city', 128);
       $table->string('device', 32);
       $table->string('browser', 128);
-      $table->string('referer', 255);
+      $table->string('referer', 255)->nullable();
       $table->timestamp('created_at');
     });
   }

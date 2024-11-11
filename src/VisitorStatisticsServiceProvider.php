@@ -93,7 +93,7 @@ class VisitorStatisticsServiceProvider extends ServiceProvider
     Route::prefix($config['prefix'])
       ->as($config['as'])
       ->middleware($config['middleware'])
-      ->namespace('Pondol\VisitorsStatistics\Http\Controllers')
+      ->namespace('Pondol\VisitorsStatistics\Http\Controllers\Admin')
       ->group(__DIR__ . '/routes/admin.php');
 
   

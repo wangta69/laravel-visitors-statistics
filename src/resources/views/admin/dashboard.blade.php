@@ -1,5 +1,11 @@
 <x-visitors::app>
   <div class="row pt-5">
+    오늘 방문자수 : {{ number_format($today['all']) }}명 <br>
+    오늘 방문자수(unique) : {{ number_format($today['unique']) }}명 <br>
+    
+    현재 접속자수: {{ number_format($today['online']) }}명
+  </div>
+  <div class="row pt-5">
     <div class="col-6">
       <div class="card">
         <div class="card-header">
@@ -95,31 +101,6 @@ var config = {
 };
 new Chart(ctx, config);
 </script>
-
-<!-- <script>
-  var ctx = document.getElementById('countryChart').getContext('2d');
-  var data = {
-  labels: ['South Korea'],
-  datasets: [{
-    label: 'Countries',
-    data: [3]
-  }]
-};
-
-var options =  {
-  scales: {
-    y: {
-      beginAtZero: true
-    }
-  }
-}
-
-new Chart(ctx, {
-  type: 'bar',
-  data: data,
-  options: options
-});
-</script> -->
 @endsection
 </x-visitors::app>
 
