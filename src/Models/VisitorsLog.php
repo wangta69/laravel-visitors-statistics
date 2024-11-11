@@ -12,7 +12,7 @@ class VisitorsLog extends Model
    * @var array
    */
   protected $fillable = [
-    'ip', 'user_id', 'continent', 'country', 'city', 'device', 'browser'
+    'ip', 'user_id', 'continent', 'country', 'city', 'device', 'browser', 'referer'
   ];
 
   const UPDATED_AT = null;

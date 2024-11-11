@@ -25,4 +25,5 @@
     --}}
     
   </ul>
+  contact us <a href="mailto:wangta69@gmail.com"><i class="fa-regular fa-envelope"></i></a>
 </nav>

@@ -132,6 +132,10 @@ class Tracker implements TrackerContract
 
   private function storeVisitorlogs(array $visitorInformation): bool {
     $visitorInformation['user_id'] = \Auth::id();
+    // $visitorInformation['referer'] = Request::server('HTTP_REFERER');
+    $visitorInformation['referer'] =url()->previous();
+    // Request::header('referer');
+    url()->previous();
     VisitorsLog::create($visitorInformation);
 
     return true;

@@ -14,89 +14,107 @@ class StatisticsController extends Controller
   use t_Statistics;
 
   public function dashboard() {
+    
+    // all, unique 방문자수 차트
+    $visitors = $this->chartingForVisitors();
+    $countries = $this->chartingForCountries();
+    $devices = $this->chartingForDevices();
+    $browsers = $this->chartingForBrowsers();
+
+    // print_r($visitors);
+    // print_r($countries);
+    // // print_r($devices);
+
+
+    return view('visitors::admin.dashboard', compact('visitors', 'countries', 'devices', 'browsers'));
+  }
+
+  private function chartingForVisitors() {
     $year = Carbon::now()->year;
     $month = Carbon::now()->month;
     $data = $this->_getTotalStatistics($year, $month);
 
-    $chart = Chartjs::
+    return Chartjs::
     type('line')
     ->element('dailyChart')
     ->labels(array_keys($data['all']))
-    ->datasets([
-      [
-        'label' => '# all',
-        'data' => array_values($data['all']),
-        'borderWidth' => 1
-      ],
-      [
-        'label' => '# unique',
-        'data' => array_values($data['unique']),
-        'borderWidth' => 1
-      ]
-    ])
-    ->options(['title'=>['text'=>'ryu....']])->render();
+    ->datasets(function($dataset) use($data) {
+      $dataset->setLabel("# all");
+      $dataset->setData(array_values($data['all']));
+      $dataset->setBorderWidth(1);
+    })
+    ->datasets(function($dataset) use($data) {
+      $dataset->setLabel("# unique");
+      $dataset->setData(array_values($data['unique']));
+      $dataset->setBorderWidth(1);
+    })
+    ->options(function($option) {
+      $option->setTitle('Daily visitor');
+    })
+    ->build();
+  } 
 
-    return view('visitors::admin.dashboard', compact('chart'));
-  }
-  /**
-   * Get statistics for the given year or month.
-   *
-   * @param int $year
-   * @param int|null $month
-   *
-   * @return JsonResponse
-   */
-  public function getStatistics(int $year, ?int $month = null)
-  {
-    print_r($this->_getTotalStatistics($year, $month));
-    return view('visitors::admin.dashboard', $this->_getStatistics($year, $month));
-  }
 
-  /**
-   * Get unique statistics for the given year or month.
-   *
-   * @param int $year
-   * @param int|null $month
-   *
-   * @return JsonResponse
-   */
-  public function getUniqueStatistics(int $year, ?int $month = null)
-  {
-    return response()->json($this->_getUniqueStatistics($year, $month));
+  private function chartingForCountries() {
+    $data = $this->_getCountriesStatistics();
+    $chartData = array_column($data , 'count');
+    $chart = Chartjs::refresh()
+    ->type('bar')
+    ->element('countryChart')
+
+    ->datasets(function($dataset) use($data) {
+      $dataset->setData(array_column($data , 'count'));
+      $dataset->setdefaultColor();
+    })
+
+    ->labels(array_column($data , 'country'));
+    $chart = $chart->options(function($option) {
+      $option->legend['display'] = false;
+      $option->setTitle('Nationals');
+    })
+    // ->applyRandomBarColor()
+    ->build();
+
+    return $chart;
   }
 
-  /**
-   * Get both all and unique statistics for a given year or month.
-   *
-   * @param int $year
-   * @param int|null $month
-   *
-   * @return JsonResponse
-   */
-  public function getTotalStatistics(int $year, ?int $month = null)
-  {
-    return response()->json($this->_getTotalStatistics($year, $month));
+  private function chartingForDevices() {
+    $data = $this->_getDeviceStatistics();
+
+    return Chartjs::refresh()
+    ->type('bar')
+    ->element('deviceChart')
+    ->labels(array_column($data , 'device'))
+    ->datasets(function($dataset) use($data) {
+      $dataset->setData(array_column($data , 'count'));
+      // $dataset->setRandomBarColor();
+      $dataset->setdefaultColor();
+    })
+    ->options(function($option) {
+      $option->legend['display'] = false;
+      $option->setTitle('Devices');
+    })
+    // ->applyRandomBarColor()
+    ->build();
   }
 
-  /**
-   * Get visits count and percentage for each country.
-   *
-   * @return JsonResponse
-   */
-  public function getCountriesStatistics()
-  {
-    return response()->json($this->_getCountriesStatistics());
-  }
+  private function chartingForBrowsers() {
+    $data = $this->_getBrowserStatistics();
 
-  /**
-   * Get years or months that have statistics tracked.
-   *
-   * @param int|null $year
-   *
-   * @return JsonResponse
-   */
-  public function getAvailableDates(?int $year = null)
-  {
-    return response()->json($this->_getAvailableDates($year));
+    return Chartjs::refresh()
+    ->type('bar')
+    ->element('browserChart')
+    ->labels(array_column($data , 'browser'))
+    ->datasets(function($dataset) use($data) {
+      $dataset->setData(array_column($data , 'count'));
+      $dataset->setdefaultColor();
+      // $dataset->setRandomBarColor();
+    })
+    // ->applyRandomBarColor()
+    ->options(function($option) {
+      $option->legend['display'] = false;
+      $option->setTitle('Browsers');
+    })
+    ->build();
   }
 }

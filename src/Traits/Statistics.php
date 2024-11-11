@@ -69,10 +69,35 @@ trait Statistics
     foreach ($visitors as $visitor) {
       $visitor->percentage = round($visitor->count * 100 / $visitorCount, 2);
     }
+    return $visitors->toArray();
+  }
 
-    return [
-      'data' => $visitors,
-    ];
+  /**
+   * Get devices count 
+   */
+  public function _getDeviceStatistics()
+  {
+    $visitors = Visitor::getDeviceCount();
+    $visitorCount = Visitor::count();
+
+    foreach ($visitors as $visitor) {
+      $visitor->percentage = round($visitor->count * 100 / $visitorCount, 2);
+    }
+    return $visitors->toArray();
+  }
+
+   /**
+   * Get browsers count
+   */
+  public function _getBrowserStatistics()
+  {
+    $visitors = Visitor::getBrowserCount();
+    $visitorCount = Visitor::count();
+
+    foreach ($visitors as $visitor) {
+      $visitor->percentage = round($visitor->count * 100 / $visitorCount, 2);
+    }
+    return $visitors->toArray();
   }
 
   /**

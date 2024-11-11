@@ -32,8 +32,24 @@ class Visitor extends Model
    */
   public static function getVisitorCountPerCountry(): Collection
   {
-    return Visitor::select(['country', DB::raw('COUNT(*) as count')])
+    return Visitor::select('country', DB::raw('COUNT(*) as count'))
       ->groupBy('country')
+      ->orderBy('count', 'DESC')
+      ->get();
+  }
+
+  public static function getDeviceCount(): Collection
+  {
+    return Visitor::select('device', DB::raw('COUNT(*) as count'))
+      ->groupBy('device')
+      ->orderBy('count', 'DESC')
+      ->get();
+  }
+
+  public static function getBrowserCount(): Collection
+  {
+    return Visitor::select('browser', DB::raw('COUNT(*) as count'))
+      ->groupBy('browser')
       ->orderBy('count', 'DESC')
       ->get();
   }
