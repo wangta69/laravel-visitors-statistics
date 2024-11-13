@@ -1,4 +1,4 @@
-<x-visitors::app>
+<x-pondol-common::app navigation="visitors::navigation">
   <div class="row pt-5">
     오늘 방문자수 : {{ number_format($today['all']) }}명 <br>
     오늘 방문자수(unique) : {{ number_format($today['unique']) }}명 <br>

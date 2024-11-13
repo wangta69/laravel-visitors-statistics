@@ -22,8 +22,11 @@ MAXMIND_LICENSE_KEY=nTNJco_xxxxxxxxx........_mmk
 php artisan pondol:maxmind-update
 ```
 
-##
+## Admin Page
+```
+https://yourdomain/visitos/admin
+```
+## API
 ```
 https://your-domain/visitors/statistics/2024/11
-https://your-domain/visitors/admin/statistics/2024/11
 ```

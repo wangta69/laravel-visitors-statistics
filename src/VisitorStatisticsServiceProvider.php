@@ -58,9 +58,9 @@ class VisitorStatisticsServiceProvider extends ServiceProvider
     // Register routes
     $this->loadVisitorsRoutes();
 
-    $this->publishes([
-      __DIR__.'/resources/pondol/' => public_path('pondol')
-    ]);
+    // $this->publishes([
+    //   __DIR__.'/resources/pondol/' => public_path('pondol')
+    // ]);
 
     // Register migrations
     $this->loadMigrationsFrom(__DIR__ . '/database/migrations');

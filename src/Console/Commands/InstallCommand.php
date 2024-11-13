@@ -36,13 +36,15 @@ class InstallCommand extends Command
   }
 
   private function installLaravelVisitors($type) {
-    \Artisan::call('vendor:publish',  [
-      '--force'=> true,
-      '--provider' => 'Pondol\VisitorsStatistics\VisitorStatisticsServiceProvider'
-    ]);
-    
+    // \Artisan::call('vendor:publish',  [
+    //   '--force'=> true,
+    //   '--provider' => 'Pondol\VisitorsStatistics\VisitorStatisticsServiceProvider'
+    // ]);
+    if ($type == 'full') {
+      $this->call('pondol:install-common');
+    }
+
     \Artisan::call('migrate');
-    // copy GeoLite2-City.mmdb
     $storage_path = config('pondol-visitor.storage_path');
     (new Filesystem)->ensureDirectoryExists($storage_path);
     copy(__DIR__.'/../../resources/GeoLite2-City.mmdb', $storage_path.'/GeoLite2-City.mmdb');

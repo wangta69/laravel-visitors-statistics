@@ -1,4 +1,4 @@
-<x-visitors::app>
+<x-pondol-common::app navigation="visitors::navigation">
 <div class="p-3 mb-4 bg-light rounded-3">
   <h2 class="fw-bold">상세로그</h2>
 
