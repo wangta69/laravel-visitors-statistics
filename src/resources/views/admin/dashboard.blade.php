@@ -13,11 +13,8 @@
           <span>일별 방문자수</span>
         </div><!-- .card-header -->
         <div class="card-body">
-        <canvas id="dailyChart" width="400" height="400"></canvas>
+          <canvas id="dailyChart" width="400" height="400"></canvas>
         </div><!-- .card-body -->
-        <div class="card-footer text-end">
-          <a href="{{ route('market.admin.users') }}" class="btn btn-primary btn-sm">더 보기</a>
-        </div><!-- .card-footer -->
       </div><!-- .card -->
     </div>
 
@@ -27,11 +24,8 @@
           <span>국가별</span>
         </div><!-- .card-header -->
         <div class="card-body">
-        <canvas id="countryChart" width="400" height="400"></canvas>
+          <canvas id="countryChart" width="400" height="400"></canvas>
         </div><!-- .card-body -->
-        <div class="card-footer text-end">
-          <a href="{{ route('market.admin.users') }}" class="btn btn-primary btn-sm">더 보기</a>
-        </div><!-- .card-footer -->
       </div><!-- .card -->
     </div>
   </div><!-- .row -->
@@ -43,11 +37,8 @@
           <span>Device </span>
         </div><!-- .card-header -->
         <div class="card-body">
-        <canvas id="deviceChart" width="400" height="400"></canvas>
+          <canvas id="deviceChart" width="400" height="400"></canvas>
         </div><!-- .card-body -->
-        <div class="card-footer text-end">
-          <a href="{{ route('market.admin.users') }}" class="btn btn-primary btn-sm">더 보기</a>
-        </div><!-- .card-footer -->
       </div><!-- .card -->
     </div>
 
@@ -57,11 +48,9 @@
           <span>Browser</span>
         </div><!-- .card-header -->
         <div class="card-body">
-        <canvas id="browserChart" width="400" height="400"></canvas>
+          <canvas id="browserChart" width="400" height="400"></canvas>
         </div><!-- .card-body -->
-        <div class="card-footer text-end">
-          <a href="{{ route('market.admin.users') }}" class="btn btn-primary btn-sm">더 보기</a>
-        </div><!-- .card-footer -->
+
       </div><!-- .card -->
     </div>
   </div><!-- .row -->
