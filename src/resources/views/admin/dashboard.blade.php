@@ -1,5 +1,6 @@
-<x-pondol-common::app navigation="visitors::navigation">
-  <div class="row pt-5">
+@section('title', 'Dashboard')
+<x-pondol-common::app-simple-sidebar navigation="visitors::navigation" :path="['대쉬보드']">
+  <div class="row pt-1">
     오늘 방문자수 : {{ number_format($today['all']) }}명 <br>
     오늘 방문자수(unique) : {{ number_format($today['unique']) }}명 <br>
     
@@ -65,11 +66,8 @@
     </div>
   </div><!-- .row -->
 
-
 @section('scripts')
 @parent
-
-
 <x-chart::chartjs :chart="$visitors"/>
 <x-chart::chartjs :chart="$countries"/>
 <x-chart::chartjs :chart="$devices"/>
