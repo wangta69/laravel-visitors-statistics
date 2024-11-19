@@ -51,7 +51,7 @@ class GeoIP implements GeoIPContract
    *
    * @return string
    */
-  public function getCountry(): string
+  public function getCountry() // : string | null
   {
     return $this->country;
   }
@@ -61,7 +61,7 @@ class GeoIP implements GeoIPContract
    *
    * @return string
    */
-  public function getCity(): string
+  public function getCity() // : string | null
   {
     return $this->city;
   }
@@ -71,7 +71,7 @@ class GeoIP implements GeoIPContract
    *
    * @return string
    */
-  public function getContinent(): string
+  public function getContinent() // : string | null
   {
     return $this->continent;
   }
