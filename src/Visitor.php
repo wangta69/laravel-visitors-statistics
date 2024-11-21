@@ -47,7 +47,7 @@ class Visitor implements VisitorContract
    *
    * @return string
    */
-  public function getIp(): string
+  public function getIp() // : string
   {
     return $this->ipAddress;
   }
@@ -57,7 +57,7 @@ class Visitor implements VisitorContract
    *
    * @return string
    */
-  public function getContinent(): string
+  public function getContinent() // : string
   {
     return $this->geoIP->getContinent();
   }
@@ -67,7 +67,7 @@ class Visitor implements VisitorContract
    *
    * @return string
    */
-  public function getCountry(): string
+  public function getCountry() // : string
   {
     return $this->geoIP->getCountry();
   }
@@ -77,7 +77,7 @@ class Visitor implements VisitorContract
    *
    * @return string
    */
-  public function getCity(): string
+  public function getCity() // : string
   {
     return $this->geoIP->getCity();
   }
@@ -87,7 +87,7 @@ class Visitor implements VisitorContract
    *
    * @return string
    */
-  public function getDevice(): string
+  public function getDevice() // : string
   {
     return $this->deviceDetector->getDeviceName();
   }
@@ -97,7 +97,7 @@ class Visitor implements VisitorContract
    *
    * @return string
    */
-  public function getBrowser(): string
+  public function getBrowser() // : string
   {
     return $this->deviceDetector->getClient('name');
   }
