@@ -16,13 +16,13 @@ class CreateVisitorsLogsTable extends Migration
   {
     Schema::create('visitors_logs', function (Blueprint $table) {
       $table->bigIncrements('id');
-      $table->string('ip', 46);
+      $table->string('ip', 46)->nullable();
       $table->bigInteger('user_id')->unsigned()->nullable();
-      $table->string('continent', 64);
-      $table->string('country', 64);
-      $table->string('city', 128);
-      $table->string('device', 32);
-      $table->string('browser', 128);
+      $table->string('continent', 64)->nullable();
+      $table->string('country', 64)->nullable();
+      $table->string('city', 128)->nullable();
+      $table->string('device', 32)->nullable();
+      $table->string('browser', 128)->nullable();
       $table->string('referer', 255)->nullable();
       $table->timestamp('created_at');
     });

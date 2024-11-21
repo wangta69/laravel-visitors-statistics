@@ -15,12 +15,12 @@ class CreateVisitorsTable extends Migration
   {
     Schema::create('visitors', function (Blueprint $table) {
       $table->bigIncrements('id');
-      $table->string('ip', 46);
-      $table->string('continent', 64);
-      $table->string('country', 64);
-      $table->string('city', 128);
-      $table->string('device', 32);
-      $table->string('browser', 128);
+      $table->string('ip', 46)->nullable();
+      $table->string('continent', 64)->nullable();
+      $table->string('country', 64)->nullable();
+      $table->string('city', 128)->nullable();
+      $table->string('device', 32)->nullable();
+      $table->string('browser', 128)->nullable();
       $table->timestamps();
     });
   }
