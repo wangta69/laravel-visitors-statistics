@@ -24,7 +24,7 @@ php artisan pondol:maxmind-update
 
 ## Admin Page
 ```
-https://yourdomain/visitos/admin
+https://yourdomain/visitors/admin
 ```
 ## API
 ```

@@ -1,4 +1,7 @@
-<x-pondol-common::app-simple-sidebar navigation="visitors::navigation" :path="['Log']">
+<x-dynamic-component 
+  :component="config('pondol-visitor.component.admin.layout')" 
+  :path="['Log']"> 
+
 <div class="p-1 mb-4 bg-light rounded-3">
   <h2 class="fw-bold">상세로그</h2>
 
@@ -103,5 +106,5 @@
 @section('scripts')
 @parent
 @endsection
-</x-visitors::app>
+</x-dynamic-component>
 

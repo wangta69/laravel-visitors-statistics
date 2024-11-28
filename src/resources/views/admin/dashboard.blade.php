@@ -1,5 +1,8 @@
 @section('title', 'Dashboard')
-<x-pondol-common::app-simple-sidebar navigation="visitors::navigation" :path="['대쉬보드']">
+<x-dynamic-component 
+  :component="config('pondol-visitor.component.admin.layout')" 
+  :path="['대쉬보드']"> 
+
   <div class="row pt-1">
     오늘 방문자수 : {{ number_format($today['all']) }}명 <br>
     오늘 방문자수(unique) : {{ number_format($today['unique']) }}명 <br>
@@ -89,5 +92,5 @@ var config = {
 new Chart(ctx, config);
 </script>
 @endsection
-</x-visitors::app>
+</x-dynamic-component>
 

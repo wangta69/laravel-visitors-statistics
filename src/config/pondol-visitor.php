@@ -21,6 +21,7 @@ return [
     'as' => 'admin.visitors.',
     'middleware' => ['web', 'admin']
   ],
+  'component' => ['admin'=>['layout'=>'visitors::admin', 'lnb'=>'visitors::partials.navigation']],
 
   /*
   unit : day

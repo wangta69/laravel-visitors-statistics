@@ -14,8 +14,8 @@
   "require": {
     "php": ">=7.0.0",
     "geoip2/geoip2": "~2.0",
-    "wangta69/laravel-chart": "^0.1",
-    "wangta69/laravel-pondol": "^0.0",
+    "wangta69/laravel-chart": "*",
+    "wangta69/laravel-pondol": "*",
     "matomo/device-detector": "^6.4"
   },
   "require-dev": {
