@@ -36,10 +36,11 @@ class InstallCommand extends Command
   }
 
   private function installLaravelVisitors($type) {
-    // \Artisan::call('vendor:publish',  [
-    //   '--force'=> true,
-    //   '--provider' => 'Pondol\VisitorsStatistics\VisitorStatisticsServiceProvider'
-    // ]);
+    \Artisan::call('vendor:publish',  [
+      '--force'=> true,
+      '--provider' => 'Pondol\VisitorsStatistics\VisitorStatisticsServiceProvider'
+    ]);
+
     if ($type == 'full') {
       $this->call('pondol:install-common');
     }

@@ -24,11 +24,6 @@ class VisitorStatisticsServiceProvider extends ServiceProvider
   public function register()
   {
 
-    // $this->app->bind(
-    //   'Pondol\VisitorsStatistics\Contracts\Tracker',
-    //   'Pondol\VisitorsStatistics\Tracker'
-    // );
-
     $this->app->bind('Pondol\VisitorsStatistics\Contracts\Visitor', function ($app, $parameters) {
       return new Visitor($parameters['ipAddress'], $parameters['userAgent'], new DeviceDetector());
     });
@@ -47,9 +42,11 @@ class VisitorStatisticsServiceProvider extends ServiceProvider
   public function boot()
   {
     // Register config
-    $this->publishes([
-      __DIR__ . '/config/pondol-visitor.php' => config_path('pondol-visitor.php'),
-    ], 'config');
+    if (!config()->has('pondol-visitor')) {
+      $this->publishes([
+        __DIR__ . '/config/pondol-visitor.php' => config_path('pondol-visitor.php'),
+      ], 'config');
+    } 
     $this->mergeConfigFrom(
       __DIR__ . '/config/pondol-visitor.php',
       'pondol-visitor'
