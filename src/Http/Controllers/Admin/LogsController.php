@@ -10,8 +10,6 @@ use App\Http\Controllers\Controller;
 class LogsController extends Controller
 {
 
-
-
   public function log(Request $request) {
     $from_date = $request->from_date;
     $to_date = $request->to_date;
@@ -30,7 +28,6 @@ class LogsController extends Controller
     
     $logs = $logs->paginate(10)->appends(request()->query());
     return view('visitors::admin.log', compact('logs'));
-    // compact('today', 'visitors', 'countries', 'devices', 'browsers')
   }
 
 }

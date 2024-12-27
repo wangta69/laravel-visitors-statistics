@@ -18,9 +18,14 @@
           <a href="{{ route('admin.visitors.dashboard') }}">dashboard</a>
         </li>  
         <li class="{{ request()->routeIs(['admin.visitors.log']) ? 'current-page' : '' }}">
-            <a href="{{ route('admin.visitors.log') }}">log</a>
-          </li>
-        </ul>
+          <a href="{{ route('admin.visitors.log') }}">log</a>
+        </li>
+        {{-- 
+        <li class="{{ request()->routeIs(['admin.visitors.log']) ? 'current-page' : '' }}">
+          <a href="{{ route('admin.visitors.config') }}">환경설정</a>
+        </li>
+        --}}
+      </ul>
     </li>
 
     

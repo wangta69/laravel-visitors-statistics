@@ -1,3 +1,4 @@
+@section('title', '방문자 로그')
 <x-dynamic-component 
   :component="config('pondol-visitor.component.admin.layout')" 
   :path="['Log']"> 

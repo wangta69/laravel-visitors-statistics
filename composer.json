@@ -2,6 +2,7 @@
   "name": "wangta69/laravel-visitors-statistics",
   "description": "Visitor tracker and statistics package for Laravel.",
   "type": "library",
+  "homepage": "https://www.onstory.fun/packages/laravel-visitors-statistics",
   "license": "MIT",
   "authors": [
     {

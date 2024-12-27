@@ -27,6 +27,7 @@ class Tracker implements TrackerContract
    * @var CarbonInterface|static
    */
   private $today;
+  private $user_id;
 
   /**
    * Tracker constructor.
@@ -36,19 +37,14 @@ class Tracker implements TrackerContract
   public function __construct(Request $request)
   {
 
-
-    // // $this->request = $request;
     // https://laravel.com/docs/11.x/helpers#method-resolve
     $this->visitor = resolve(VisitorContact::class, [
-      // 'ipAddress' => $request->header('HTTP_CF_CONNECTING_IP') ?? $request->getClientIp(),
       'ipAddress' => $this->getRealIpAddr(),
       'userAgent' => $request->userAgent()
     ]);
 
-    // $this->visitor = VisitorContact::class;
-    // $this->visitor->ipAddress = $request->header('HTTP_CF_CONNECTING_IP') ?? $request->getClientIp();
-
     $this->today = Carbon::today();
+    $this->user_id = \Auth::id();
   }
 
   /**
@@ -77,6 +73,14 @@ class Tracker implements TrackerContract
   {
 
     if ( $this->visitor->isBot()) {
+      return false;
+    }
+
+    if(in_array($this->visitor->getIp(), config('pondol-visitor.prohibit_ips'))) {
+      return false;
+    }
+
+    if($user_id && in_array($user_id, config('pondol-visitor.prohibit_ids'))) {
       return false;
     }
 
@@ -131,7 +135,7 @@ class Tracker implements TrackerContract
   }
 
   private function storeVisitorlogs(array $visitorInformation): bool {
-    $visitorInformation['user_id'] = \Auth::id();
+    $visitorInformation['user_id'] = $this->user_id;
     // $visitorInformation['referer'] = Request::server('HTTP_REFERER');
     $visitorInformation['referer'] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER']: null;
 
@@ -139,8 +143,6 @@ class Tracker implements TrackerContract
 
     return true;
   }
-
-  
 
   /**
    * Update statistics in the database.
