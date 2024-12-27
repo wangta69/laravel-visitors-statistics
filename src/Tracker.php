@@ -80,7 +80,7 @@ class Tracker implements TrackerContract
       return false;
     }
 
-    if($user_id && in_array($user_id, config('pondol-visitor.prohibit_ids'))) {
+    if($this->user_id && in_array($this->user_id, config('pondol-visitor.prohibit_ids'))) {
       return false;
     }
 
