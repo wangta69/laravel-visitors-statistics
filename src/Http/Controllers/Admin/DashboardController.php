@@ -21,7 +21,6 @@ class DashboardController extends Controller
     $countries = $this->chartingForCountries();
     $devices = $this->chartingForDevices();
     $browsers = $this->chartingForBrowsers();
-
     return view('visitors::admin.dashboard', compact('today', 'visitors', 'countries', 'devices', 'browsers'));
   }
 

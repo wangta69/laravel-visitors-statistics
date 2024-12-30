@@ -24,11 +24,10 @@ trait Statistics
   {
 
     $statistic = VisitorsStatistic::where('date', $date)->get();
-    $return = [];
+    $return = ['all'=>0, 'unique'=>0, 'online'=>0];
     foreach($statistic as $v) {
       $return[$v->type] = $v->value;
     }
-
     $return['online'] = Visitor::onlineCount(config('pondol-visitor.visitors_online_period'));
     return $return;
   }
